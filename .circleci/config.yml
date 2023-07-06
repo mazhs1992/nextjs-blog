@@ -61,7 +61,7 @@ workflows:
       - preview_deployment:
           filters:
             branches:
-              ignore: /main/
+              only: /development/
       - production_deployment:
           filters:
             branches:
