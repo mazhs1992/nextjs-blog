@@ -6,7 +6,7 @@ jobs:
     docker:
       - image: circleci/node:latest  
     steps:
-      - checkout
+      - checkout # This command fetches the code from your git repo.
       - run:
           name: Install Vercel CLI
           command: sudo npm install -g vercel
@@ -51,6 +51,16 @@ jobs:
           name: Deploy Project Artifacts to Vercel
           command: vercel deploy --prebuilt --prod --token=$VERCEL_TOKEN
 
+  Approve:
+    docker:
+      - image: circleci/node:latest    
+    steps:
+      - run:
+          name: Approval Complete
+          command: |
+            echo 'The work is now complete.'
+
+
 workflows:
   version: 2
   preview_and_production:
@@ -63,3 +73,11 @@ workflows:
           filters:
             branches:
               only: /main/
+      - Hold-for-Approval:
+          type: approval
+          requires:
+            - preview_deployment
+            - production_deployment
+      - Approve:
+          requires:
+            - Hold-for-Approval
